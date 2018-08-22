@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 languages = ["java", "python", "dotnet", "ruby"]
 
 
-def pagescraper(response):
-    soup = BeautifulSoup(r.text, "html.parser")
+def pagescraper(response, language):
+    soup = BeautifulSoup(response.text, "html.parser")
     api_table = soup.find("table", class_="directory responsive")
     api_table_rows = api_table.find_all("tr")
     for row in api_table_rows:
@@ -25,7 +25,7 @@ def pagescraper(response):
             )
             for detail in api_data:
                 line.append(detail.get_text())
-
+            line.append(language)
             library_writer.writerow(line)
         else:
             pass
@@ -44,7 +44,7 @@ with open("apis.csv", "w") as f:
             r.raise_for_status()
             if r.status_code == 200:
                 print("200 OK")
-                pagescraper(r)
+                pagescraper(r, language)
         except requests.exceptions.HTTPError as err:
             print(err)
             print("Skipping...")
