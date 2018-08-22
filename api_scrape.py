@@ -17,15 +17,25 @@ def pagescraper(response, language):
             line.append(
                 row.find("div", class_="google-directory-api").get_text()
             )
+
+            # add a column entry for the 'library_type'
+            line.append("apiary")
+
             api_details = row.find(
                 "td", class_="google-directory-details-cell"
             )
             api_data = api_details.find_all(
                 "td", class_="google-directory-api-data"
             )
+
+            # api_data now contains the 'api_name', 'api_version'
+            # and 'description'
             for detail in api_data:
                 line.append(detail.get_text())
+
+            # add a column entry for the library 'language'
             line.append(language)
+
             library_writer.writerow(line)
         else:
             pass
